@@ -1,13 +1,18 @@
-import { Component } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 import { NbButtonModule, NbIconModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { Customer } from '../../shared/models/customer.model';
+import { CustomersService } from '../../shared/services/customers.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-customer',
-  standalone: true, // ✅ CẦN THÊM DÒNG NÀY
+  standalone: true,
   imports: [
     NgFor,
+    NgIf,
+    FormsModule,
     NbButtonModule,
     NbIconModule,
     NbEvaIconsModule
@@ -15,31 +20,56 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.css'],
 })
-export class CustomerComponent {
-  customers = [
-    {
-      CustomerID: 1,
-      FullName: 'Nguyễn Văn A',
-      Email: 'a@example.com',
-      Phone: '0901234567',
-      Gender: 'M',
-      BirthDate: '1990-01-01',
-      Channel: 'Website',
-      IsMember: true,
-      CreatedAt: '2024-06-01 10:00:00',
-      UpdatedAt: '2024-06-10 15:30:00'
+export class CustomerComponent implements OnInit {
+  customers: Customer[] = [];
+  showAddModal = false;
+    newCustomer = {
+    FullName: '',
+    Email: '',
+    Phone: '',
+    Gender: '',
+    BirthDate: '',
+    Channel: '',
+    IsMember: false,
+  };
+addCustomer() {
+  this.customerService.createCustomer(this.newCustomer as Customer).subscribe({
+    next: (res) => {
+      const newCustomer = res.Data;
+      this.customers.push(newCustomer);
+      this.showAddModal = false;
+      this.newCustomer = {
+        FullName: '',
+        Email: '',
+        Phone: '',
+        Gender: '',
+        BirthDate: '',
+        Channel: '',
+        IsMember: false,
+      };
     },
-    {
-      CustomerID: 2,
-      FullName: 'Trần Thị B',
-      Email: null,
-      Phone: '0912345678',
-      Gender: 'F',
-      BirthDate: null,
-      Channel: 'Shopee',
-      IsMember: false,
-      CreatedAt: '2024-06-05 14:20:00',
-      UpdatedAt: null
+    error: (err) => {
+      console.error('Lỗi khi thêm khách hàng:', err);
+      alert('Thêm khách hàng thất bại!');
     }
-  ];
+  });
+}
+
+
+  private customerService = inject(CustomersService);
+
+  ngOnInit(): void {
+    this.loadCustomers();
+  }
+
+  loadCustomers(): void {
+    this.customerService.getCustomers().subscribe({
+      next: (res) => {
+        this.customers = res.Data;
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy danh sách khách hàng:', err);
+      }
+    });
+  }
 }

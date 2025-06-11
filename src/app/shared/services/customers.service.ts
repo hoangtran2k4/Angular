@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Customer } from '../models/customer.model';
 import { ApiService } from '../seed-work/api.service';
 import { ResultResponse } from '../seed-work/result-response.model';
+import { TokenStorage } from '../common/token-validity';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,13 @@ export class CustomersService {
     return this.apiService.get<Customer>(`${this.endpoint}/${id}`);
   }
 
-  createCustomer(customer: Customer): Observable<ResultResponse<Customer>> {
-    return this.apiService.post<Customer>(this.endpoint, customer);
-  }
+createCustomer(customer: Customer): Observable<ResultResponse<Customer>> {
+  const token = TokenStorage.getToken();
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.apiService.post<Customer>(this.endpoint, customer, headers);
+}
 }

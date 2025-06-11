@@ -1,7 +1,34 @@
 <div class="table-wrapper">
-  <div class="action-bar">
-    <button class="add-button">+ Add</button>
+<!-- Nút Add -->
+
+
+<!-- Modal thêm khách hàng -->
+<div class="modal-overlay" *ngIf="showAddModal">
+  <div class="modal-content">
+    <h3>Thêm khách hàng mới</h3>
+    <form (ngSubmit)="addCustomer()" #customerForm="ngForm">
+      <input type="text" placeholder="Full Name" [(ngModel)]="newCustomer.FullName" name="FullName" required />
+      <input type="text" placeholder="Email" [(ngModel)]="newCustomer.Email" name="Email" />
+      <input type="text" placeholder="Phone" [(ngModel)]="newCustomer.Phone" name="Phone" required />
+      <select [(ngModel)]="newCustomer.Gender" name="Gender">
+        <option value="">-- Gender --</option>
+        <option value="1">Nam</option>
+        <option value="2">Nữ</option>
+      </select>
+      <input type="date" [(ngModel)]="newCustomer.BirthDate" name="BirthDate" />
+      <input type="text" placeholder="Channel" [(ngModel)]="newCustomer.Channel" name="Channel" />
+      <label>
+        <input type="checkbox" [(ngModel)]="newCustomer.IsMember" name="IsMember" />
+        Là thành viên
+      </label>
+      <div class="modal-actions">
+        <button type="submit">Lưu</button>
+        <button type="button" (click)="showAddModal = false">Hủy</button>
+      </div>
+    </form>
   </div>
+</div>
+
 
   <table class="container customer-table">
     <thead>
@@ -39,4 +66,7 @@
       </tr>
     </tbody>
   </table>
+  <div class="action-bar">
+  <button class="add-button" (click)="showAddModal = true">+ Add</button>
+</div>
 </div>

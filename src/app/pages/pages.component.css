@@ -50,10 +50,19 @@ nb-sidebar[state='collapsed'] {
         transform: translateX(-100%);
     }
 
-    nb-sidebar[state='expanded'],
-    nb-sidebar[state='compacted'] {
-        transform: translateX(0);
-    }
+/* Đổ bóng cho sidebar khi ở trạng thái mở (expanded hoặc compacted) */
+nb-sidebar[state='expanded'],
+nb-sidebar[state='compacted'] {
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* ánh bóng nhẹ bên phải */
+  z-index: 100;
+  background-color: #fff;
+}
+
+/* Tránh đổ bóng khi collapsed */
+nb-sidebar[state='collapsed'] {
+  box-shadow: none !important;
+}
+
 
     .main-content {
         margin-left: 0 !important;
@@ -72,4 +81,7 @@ nb-sidebar[state='collapsed'] {
     padding: 0 !important;
     overflow: hidden;
     transition: width 0.3s;
+}
+nb-sidebar {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
