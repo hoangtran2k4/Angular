@@ -1,0 +1,22 @@
+<nb-layout>
+  <nb-layout-header fixed>
+    <nb-actions size="small">
+      <nb-action icon="menu-outline" (click)="toggleSidebar()"></nb-action>
+      <nb-action>Warehouse App</nb-action>
+    </nb-actions>
+    <nb-actions size="small">
+      <nb-action (click)="logout()" icon="person-outline"></nb-action>
+    </nb-actions>
+  </nb-layout-header>
+  <nb-sidebar tag="menu-sidebar" [state]="sidebarState" class="custom-sidebar">
+    <nb-menu
+      [items]="menuItems"
+      (itemClick)="onMenuItemClick()"
+      [class.collapsed-menu]="sidebarState === 'compacted'"
+    >
+    </nb-menu>
+  </nb-sidebar>
+  <nb-layout-column class="main-content">
+    <router-outlet></router-outlet>
+  </nb-layout-column>
+</nb-layout>

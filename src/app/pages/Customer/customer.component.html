@@ -1,0 +1,42 @@
+<div class="table-wrapper">
+  <div class="action-bar">
+    <button class="add-button">+ Add</button>
+  </div>
+
+  <table class="container customer-table">
+    <thead>
+      <tr>
+        <th>CustomerID</th>
+        <th>FullName</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Gender</th>
+        <th>BirthDate</th>
+        <th>Channel</th>
+        <th>IsMember</th>
+        <th>CreatedAt</th>
+        <th>UpdatedAt</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customer of customers">
+        <td>{{ customer.CustomerID }}</td>
+        <td>{{ customer.FullName }}</td>
+        <td>{{ customer.Email || '-' }}</td>
+        <td>{{ customer.Phone }}</td>
+        <td>{{ customer.Gender || '-' }}</td>
+        <td>{{ customer.BirthDate || '-' }}</td>
+        <td>{{ customer.Channel || '-' }}</td>
+        <td>{{ customer.IsMember ? 'Yes' : 'No' }}</td>
+        <td>{{ customer.CreatedAt }}</td>
+        <td>{{ customer.UpdatedAt || '-' }}</td>
+        <td>
+          <button class="edit-btn">Sửa</button>
+          <span class="divider">|</span>
+          <button class="delete-btn">Xóa</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

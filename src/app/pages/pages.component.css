@@ -1,0 +1,75 @@
+/* Sidebar expanded (full width) */
+nb-sidebar[state='expanded'] {
+    width: 250px !important;
+    transition: width 0.3s;
+}
+
+nb-layout-header[fixed] {
+    /* position: fixed; */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin: 0;
+}
+
+.main-content {
+    margin-top: -15px !important;
+    padding: 0 !important;
+    /* box-sizing: border-box;
+    background-color: aliceblue; */
+    /* overflow-y: auto; */
+}
+
+nb-sidebar[state='collapsed'] {
+    width: 80px !important;
+    transition: width 0.3s;
+    overflow-x: hidden;
+}
+
+.collapsed-menu nb-menu-item .menu-title {
+    display: none !important;
+}
+
+/* Khi mobile: sidebar phủ lên main content */
+@media (max-width: 767.98px) {
+    nb-sidebar {
+        position: fixed !important;
+        top: 56px;
+        left: 0;
+        height: calc(100vh - 56px);
+        z-index: 100;
+        background: #fff;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    nb-sidebar[state='collapsed'] {
+        transform: translateX(-100%);
+    }
+
+    nb-sidebar[state='expanded'],
+    nb-sidebar[state='compacted'] {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 1rem;
+    }
+}
+
+nb-sidebar[state='collapsed'] {
+    width: 0 !important;
+    overflow: hidden;
+    transition: width 0.3s;
+}
+
+nb-sidebar[state='collapsed'] {
+    width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    transition: width 0.3s;
+}

@@ -1,0 +1,26 @@
+<div class="login-wrapper">
+  <form class="login-form" (ngSubmit)="onLogin()">
+    <h2>Đăng nhập</h2>
+    <label for="username">Tên đăng nhập hoặc Email</label>
+    <input
+      id="username"
+      type="text"
+      [(ngModel)]="username"
+      name="username"
+      required
+    />
+    <label for="password">Mật khẩu</label>
+    <input
+      id="password"
+      type="password"
+      [(ngModel)]="password"
+      name="password"
+      required
+    />
+    <div class="remember-me">
+      <input type="checkbox" id="remember" />
+      <label for="remember">Ghi nhớ đăng nhập</label>
+    </div>
+    <button type="submit">Đăng nhập</button>
+  </form>
+</div>

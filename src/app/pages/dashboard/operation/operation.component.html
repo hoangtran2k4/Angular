@@ -1,0 +1,81 @@
+<div class="operation-wrapper">
+  <div class="operation-wrapper">
+    <div class="input-wrapper">
+      <input type="text" placeholder="" />
+    </div>
+
+    <div class="status-summary">
+      <div class="status-card new">
+        <h2>11</h2>
+        <p>18<br />Mới</p>
+      </div>
+      <div class="status-card processing">
+        <h2>9</h2>
+        <p>14<br />Đang xử lý</p>
+      </div>
+      <div class="status-card ready">
+        <h2>2</h2>
+        <p>3<br />Sẵn sàng bàn giao</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Đơn hàng trễ theo ngày -->
+  <div class="delayed-by-day">
+    <div class="header">
+      <span>Đơn hàng trễ theo ngày</span>
+      <span>Số ngày trễ lớn nhất: <strong>82</strong></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Mới</th>
+          <th>Chờ xác định vị trí</th>
+          <th>Xác định vị trí một phần</th>
+          <th>Sẵn sàng lấy hàng</th>
+          <th>Đang lấy hàng</th>
+          <th>Đã lấy hàng</th>
+          <th>Đang đóng gói</th>
+          <th>Sẵn sàng bàn giao</th>
+          <th>Đã bàn giao vận chuyển</th>
+          <th>Lấy hàng thành công</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of rows">
+          <td>{{ row.label }}</td>
+          <td *ngFor="let cell of row.values">{{ cell }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Đơn hàng trễ theo đối tác -->
+  <div class="delayed-by-partner">
+    <span>Đơn hàng trễ theo đối tác</span>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Đối tác</th>
+          <th>Tổng cộng</th>
+          <th>N+0</th>
+          <th>N+1</th>
+          <th>N+2</th>
+          <th>N+3</th>
+          <th>N+4</th>
+          <th>N5+</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let partner of partners; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ partner.name }}</td>
+          <td>{{ partner.total }}</td>
+          <td *ngFor="let d of partner.days">{{ d }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
