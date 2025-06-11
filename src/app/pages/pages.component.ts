@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { TokenStorage } from '../shared/common/token-validity';
 import { AuthHandlerService } from '../auth/auth-handler';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { UserActivityService } from '../shared/services/user-activity.service';
 
 @Component({
   selector: 'app-pages',
@@ -63,7 +64,8 @@ export class PagesComponent implements OnInit, OnDestroy {
     private breakpointService: NbMediaBreakpointsService,
     private themeService: NbThemeService,
     private authHandler: AuthHandlerService,
-    private router: Router
+    private router: Router,
+    private userActivityService: UserActivityService
   ) {
     const breakpoints = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange().subscribe(([_, newValue]) => {
@@ -104,9 +106,11 @@ export class PagesComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.authHandler.initAuthHandler();
+    this.userActivityService.startTracking();
   }
 
   ngOnDestroy(): void {
     this.authHandler.ngOnDestroy();
+    this.userActivityService.stopTracking();
   }
 }

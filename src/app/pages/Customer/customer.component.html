@@ -1,48 +1,45 @@
 <div class="table-wrapper">
-<!-- Nút Add -->
-
-
-<!-- Modal thêm khách hàng -->
-<div class="modal-overlay" *ngIf="showAddModal">
-  <div class="modal-content">
-    <h3>Thêm khách hàng mới</h3>
-    <form (ngSubmit)="addCustomer()" #customerForm="ngForm">
-      <input type="text" placeholder="Full Name" [(ngModel)]="newCustomer.FullName" name="FullName" required />
-      <input type="text" placeholder="Email" [(ngModel)]="newCustomer.Email" name="Email" />
-      <input type="text" placeholder="Phone" [(ngModel)]="newCustomer.Phone" name="Phone" required />
-      <select [(ngModel)]="newCustomer.Gender" name="Gender">
-        <option value="">-- Gender --</option>
-        <option value="1">Nam</option>
-        <option value="2">Nữ</option>
-      </select>
-      <input type="date" [(ngModel)]="newCustomer.BirthDate" name="BirthDate" />
-      <input type="text" placeholder="Channel" [(ngModel)]="newCustomer.Channel" name="Channel" />
-      <label>
-        <input type="checkbox" [(ngModel)]="newCustomer.IsMember" name="IsMember" />
-        Là thành viên
-      </label>
-      <div class="modal-actions">
-        <button type="submit">Lưu</button>
-        <button type="button" (click)="showAddModal = false">Hủy</button>
-      </div>
-    </form>
+  <!-- MODAL -->
+  <div class="modal-overlay" *ngIf="showAddModal">
+    <div class="modal-content">
+      <h3>{{ isEditMode ? 'Cập nhật khách hàng' : 'Thêm khách hàng mới' }}</h3>
+      <form (ngSubmit)="saveCustomer()" #customerForm="ngForm">
+        <input type="text" placeholder="Họ và tên" [(ngModel)]="newCustomer.FullName" name="FullName" required />
+        <input type="text" placeholder="Email" [(ngModel)]="newCustomer.Email" name="Email" />
+        <input type="text" placeholder="Số điện thoại" [(ngModel)]="newCustomer.Phone" name="Phone" required />
+        <select [(ngModel)]="newCustomer.Gender" name="Gender">
+          <option value="" disabled selected>-- Chọn giới tính --</option>
+          <option value="1">Nam</option>
+          <option value="2">Nữ</option>
+        </select>
+        <input type="date" [(ngModel)]="newCustomer.BirthDate" name="BirthDate" />
+        <input type="text" placeholder="Khách hàng đến từ" [(ngModel)]="newCustomer.Channel" name="Channel" />
+        <div class="checkbox-inline">
+          <input type="checkbox" [(ngModel)]="newCustomer.IsMember" name="IsMember" id="isMember" />
+          <label for="isMember">Là thành viên</label>
+        </div>
+        <div class="modal-actions">
+          <button type="submit">{{ isEditMode ? 'Cập nhật' : 'Lưu' }}</button>
+          <button type="button" (click)="closeModal()">Hủy</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
 
-
+  <!-- TABLE -->
   <table class="container customer-table">
     <thead>
       <tr>
-        <th>CustomerID</th>
-        <th>FullName</th>
+        <th>ID User</th>
+        <th>Họ & tên</th>
         <th>Email</th>
-        <th>Phone</th>
-        <th>Gender</th>
-        <th>BirthDate</th>
-        <th>Channel</th>
-        <th>IsMember</th>
-        <th>CreatedAt</th>
-        <th>UpdatedAt</th>
+        <th>Số điện thoại</th>
+        <th>Giới tính</th>
+        <th>Ngày sinh</th>
+        <th>Khách hàng đến từ</th>
+        <th>Là thành viên</th>
+        <th>Ngày bắt đầu</th>
+        <th>Ngày cập nhật mới nhất</th>
         <th>Edit</th>
       </tr>
     </thead>
@@ -52,21 +49,23 @@
         <td>{{ customer.FullName }}</td>
         <td>{{ customer.Email || '-' }}</td>
         <td>{{ customer.Phone }}</td>
-        <td>{{ customer.Gender || '-' }}</td>
+        <td>{{ customer.Gender === '1' ? 'Nam' : customer.Gender === '2' ? 'Nữ' : '-' }}</td>
         <td>{{ customer.BirthDate || '-' }}</td>
         <td>{{ customer.Channel || '-' }}</td>
-        <td>{{ customer.IsMember ? 'Yes' : 'No' }}</td>
+        <td>{{ customer.IsMember ? 'Có' : 'Không' }}</td>
         <td>{{ customer.CreatedAt }}</td>
         <td>{{ customer.UpdatedAt || '-' }}</td>
         <td>
-          <button class="edit-btn">Sửa</button>
+          <button class="edit-btn" (click)="openEditModal(customer)">Sửa</button>
           <span class="divider">|</span>
-          <button class="delete-btn">Xóa</button>
+          <button class="delete-btn" (click)="deleteCustomer(customer)">Xóa</button>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <!-- ACTION BAR -->
   <div class="action-bar">
-  <button class="add-button" (click)="showAddModal = true">+ Add</button>
-</div>
+    <button class="add-button" (click)="openAddModal()">+ Add</button>
+  </div>
 </div>

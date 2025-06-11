@@ -12,7 +12,7 @@ import { TokenStorage } from '../common/token-validity';
 export class CustomersService {
   private readonly endpoint = 'Customers';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   getCustomers(params?: HttpParams): Observable<ResultResponse<Customer[]>> {
     return this.apiService.get<Customer[]>(this.endpoint, params);
@@ -22,13 +22,31 @@ export class CustomersService {
     return this.apiService.get<Customer>(`${this.endpoint}/${id}`);
   }
 
-createCustomer(customer: Customer): Observable<ResultResponse<Customer>> {
-  const token = TokenStorage.getToken();
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  });
+  createCustomer(customer: Customer): Observable<ResultResponse<Customer>> {
+    const token = TokenStorage.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
 
-  return this.apiService.post<Customer>(this.endpoint, customer, headers);
-}
+    return this.apiService.post<Customer>(this.endpoint, customer, headers);
+  }
+  updateCustomer(id: number, customer: Customer): Observable<ResultResponse<Customer>> {
+    const token = TokenStorage.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.apiService.post<Customer>(`${this.endpoint}/${id}/put`, customer, headers);
+  }
+  deleteCustomer(id: number, customer: Customer): Observable<ResultResponse<Customer>> {
+    const token = TokenStorage.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.apiService.post<Customer>(`${this.endpoint}/${id}/delete`, customer, headers);
+  }
 }

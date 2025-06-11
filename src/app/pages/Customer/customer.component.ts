@@ -15,61 +15,126 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     NbButtonModule,
     NbIconModule,
-    NbEvaIconsModule
+    NbEvaIconsModule,
   ],
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.css'],
 })
 export class CustomerComponent implements OnInit {
-  customers: Customer[] = [];
-  showAddModal = false;
-    newCustomer = {
-    FullName: '',
-    Email: '',
-    Phone: '',
-    Gender: '',
-    BirthDate: '',
-    Channel: '',
-    IsMember: false,
-  };
-addCustomer() {
-  this.customerService.createCustomer(this.newCustomer as Customer).subscribe({
-    next: (res) => {
-      const newCustomer = res.Data;
-      this.customers.push(newCustomer);
-      this.showAddModal = false;
-      this.newCustomer = {
-        FullName: '',
-        Email: '',
-        Phone: '',
-        Gender: '',
-        BirthDate: '',
-        Channel: '',
-        IsMember: false,
-      };
-    },
-    error: (err) => {
-      console.error('Lỗi khi thêm khách hàng:', err);
-      alert('Thêm khách hàng thất bại!');
-    }
-  });
-}
-
-
   private customerService = inject(CustomersService);
+
+  customers: Customer[] = [];
+
+  showAddModal = false;
+  isEditMode = false;
+  selectedCustomerId: number | null = null;
+
+  newCustomer: Customer = this.initEmptyCustomer();
 
   ngOnInit(): void {
     this.loadCustomers();
   }
+  private formatDateOnly(date: string | Date | null): string {
+    if (!date) return '';
+    return new Date(date).toISOString().split('T')[0];
+  }
+
 
   loadCustomers(): void {
     this.customerService.getCustomers().subscribe({
       next: (res) => {
-        this.customers = res.Data;
+        this.customers = res.Data.map((customer: Customer) => ({
+          ...customer,
+          CreatedAt: this.formatDateOnly(customer.CreatedAt),
+          BirthDate: this.formatDateOnly(customer.BirthDate),
+        }));
       },
       error: (err) => {
         console.error('Lỗi khi lấy danh sách khách hàng:', err);
       }
     });
   }
+
+  openAddModal(): void {
+    this.isEditMode = false;
+    this.selectedCustomerId = null;
+    this.newCustomer = this.initEmptyCustomer();
+    this.showAddModal = true;
+  }
+
+  openEditModal(customer: Customer): void {
+    this.isEditMode = true;
+    this.selectedCustomerId = customer.CustomerID;
+    this.newCustomer = { ...customer };
+    this.showAddModal = true;
+  }
+
+  saveCustomer(): void {
+    if (this.isEditMode && this.selectedCustomerId !== null) {
+      this.customerService.updateCustomer(this.selectedCustomerId, this.newCustomer).subscribe({
+        next: (res) => {
+          const updated = res.Data;
+          const index = this.customers.findIndex(c => c.CustomerID === updated.CustomerID);
+          if (index !== -1) this.customers[index] = updated;
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Lỗi khi cập nhật khách hàng:', err);
+          alert('Cập nhật khách hàng thất bại!');
+        }
+      });
+    } else {
+      this.customerService.createCustomer(this.newCustomer).subscribe({
+        next: (res) => {
+          this.customers.push(res.Data);
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error('Lỗi khi thêm khách hàng:', err);
+          alert('Thêm khách hàng thất bại!');
+        }
+      });
+    }
+  }
+
+  closeModal(): void {
+    this.showAddModal = false;
+    this.resetForm();
+    this.isEditMode = false;
+    this.selectedCustomerId = null;
+  }
+
+  resetForm(): void {
+    this.newCustomer = this.initEmptyCustomer();
+  }
+
+  private initEmptyCustomer(): Customer {
+    return {
+      CustomerID: 0,
+      FullName: '',
+      Email: '',
+      Phone: '',
+      Gender: '',
+      BirthDate: '',
+      Channel: '',
+      IsMember: false,
+      CreatedAt: '',
+      UpdatedAt: null,
+    };
+  }
+  deleteCustomer(customer: Customer) {
+    if (confirm(`Bạn có chắc chắn muốn xoá khách hàng "${customer.FullName}"?`)) {
+      this.customerService.deleteCustomer(customer.CustomerID, customer).subscribe({
+        next: (res) => {
+          this.customers = this.customers.filter(c => c.CustomerID !== customer.CustomerID);
+          alert('Xoá khách hàng thành công.');
+        },
+        error: (err) => {
+          console.error('Lỗi khi xoá khách hàng:', err);
+          alert('Xoá khách hàng thất bại!');
+        }
+      });
+    }
+  }
+
 }
